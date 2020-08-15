@@ -2,7 +2,7 @@ from Model.Arista import Arista
 from Model.Vertice import Vertice
 from collections import deque
 from copy import copy
-
+import json
 class Grafo:
     def __init__(self):
         self.listaVertices = []
@@ -340,3 +340,12 @@ class Grafo:
             return temp[0]  # es la menor
 
         return None#es la menor
+
+    def cargarRedInicial(self, ruta):
+        with open(ruta) as contenido:
+            redAcme = json.load(contenido)
+        for vertice in redAcme["Cuevas"]:
+            self.ingresarVertice(vertice)
+        for arista in redAcme["Caminos"]:
+            self.ingresarArista(arista[0], arista[1], arista[2])
+        self.noDirigido(self.listaAristas)

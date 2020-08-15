@@ -2,8 +2,7 @@ from Controller.Grafo import Grafo
 
 G = Grafo()
 
-
-G.ingresarVertice('A')
+""" G.ingresarVertice('A')
 G.ingresarVertice('B')
 G.ingresarVertice('C')
 G.ingresarVertice('D')
@@ -32,8 +31,9 @@ G.ingresarArista('E', 'F', 8)
 G.ingresarArista('F', 'G', 11)
 G.ingresarArista('G', 'F', 11)
 G.ingresarArista('E', 'G', 9)
-G.ingresarArista('G', 'E', 9)
+G.ingresarArista('G', 'E', 9) """
 
+G.cargarRedInicial("redInicial.json")
 
 G.imprimirVertice()
 
@@ -62,4 +62,3 @@ G.separador()
 # G.separador()
 # G.amplitud(1)
 # print(G.amplitud(1))
-
