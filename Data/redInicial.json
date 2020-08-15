@@ -1,0 +1,29 @@
+{
+  "Cuevas": [
+    "Silvestre",
+    "Piolin",
+    "Tazmania",
+    "Yayita",
+    "Popeye",
+    "Coyote",
+    "Bunny",
+    "Correcaminos",
+    "Marvin"
+  ],
+
+  "Caminos": [
+    ["Silvestre", "Piolin", 10],
+    ["Silvestre", "Tazmania", 15],
+    ["Piolin", "Yayita", 25],
+    ["Yayita", "Tazmania", 16],
+    ["Piolin", "Popeye", 30],
+    ["Popeye", "Correcaminos", 5],
+    ["Correcaminos", "Marvin", 44],
+    ["Correcaminos", "Bunny", 60],
+    ["Bunny", "Marvin", 2],
+    ["Yayita", "Bunny", 22],
+    ["Marvin", "Coyote", 58],
+    ["Coyote", "Tazmania", 21],
+    ["Bunny", "Tazmania", 33]
+  ]
+}
