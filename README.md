@@ -1,6 +1,8 @@
 # La Montaña "Acme"
 _La montaña “Acme” tiene una serie de cuevas conectadas por diferentes rutas, como se muestra en el siguiente ejemplo:_
 
+![Acme](https://user-images.githubusercontent.com/62358156/90304980-01c52200-de83-11ea-9725-d445a44cad8b.PNG)
+
 _Como se puede observar cada una de las cuevas están conectadas por un camino donde se puede observar la distancia entre ellas, el centro de recursos dispone de los diferentes insumos para las cuevas (martillos, hachas, palas, picas, agua, etc..). Este centro de recursos se encarga de suministrar a toda la red cuevas los recursos que requieran mediante sus camiones de reparto._
 
 ## Comenzando 🚀
