@@ -39,6 +39,6 @@ _Se desea simular todo el sistema, teniendo en cuenta:_
 ## Autores ✒️
 _Todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
 * **Juan David Merchán Torres** - *Trabajo Inicial* - [NikolaM-Dev](https://github.com/NikolaM-Dev)
-<!-- * **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal) -->
+* **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal)
 
 ⌨️ con ❤️ por [NikolaM-Dev](https://github.com/NikolaM-Dev) 😊
