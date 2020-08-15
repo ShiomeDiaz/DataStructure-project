@@ -2,7 +2,7 @@ from Controller.Grafo import Grafo
 
 G = Grafo()
 
-'''
+
 G.ingresarVertice('A')
 G.ingresarVertice('B')
 G.ingresarVertice('C')
@@ -62,4 +62,4 @@ G.separador()
 # G.separador()
 # G.amplitud(1)
 # print(G.amplitud(1))
-'''
+
