@@ -1,4 +1,4 @@
 .vscode
-./Scripts
 /venv/
 pyvenv.cfg
+/Scripts/
