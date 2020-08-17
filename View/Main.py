@@ -33,7 +33,8 @@ G.ingresarArista('G', 'F', 11)
 G.ingresarArista('E', 'G', 9)
 G.ingresarArista('G', 'E', 9) """
 
-G.cargarRedInicial("redInicial.json")
+G.cargarRedInicial("../Data/redInicial.json")
+
 
 G.imprimirVertice()
 
