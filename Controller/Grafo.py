@@ -341,6 +341,44 @@ class Grafo:
 
         return None#es la menor
 
+    def cambiarDireccion(self, origen, destino):
+        for arista in self.listaAristas:
+            origenCopia = str(arista.getOrigen())
+            destinoCopia = str(arista.getDestino())
+            if origen == origenCopia and destino == destinoCopia:
+                temp = arista.getOrigen()
+                arista.setOrigen(arista.getDestino())
+                arista.setDestino(temp)
+
+    def bloquearArista(self, origen, destino):
+        for arista in self.listaAristas:
+            origenCopia = str(arista.getOrigen())
+            destinoCopia = str(arista.getDestino())
+            if origen == origenCopia and destino == destinoCopia:
+                self.listaBloqueadas.append(arista)
+                indice = self.listaAristas.index(arista)
+                self.listaAristas.pop(indice)
+
+    def desbloquearArista(self, origen, destino):
+        for arista in self.listaBloqueadas:
+            origenCopia = str(arista.getOrigen())
+            destinoCopia = str(arista.getDestino())
+            if origen == origenCopia and destino == destinoCopia:
+                self.listaAristas.append(arista)
+                indice = self.listaBloqueadas.index(arista)
+                self.listaBloqueadas.pop(indice)
+
+    def gradoVertice(self, vertice):
+        gradoVertice = 0
+        verticeEntrada = self.verificarVertice(vertice)
+        copiaAristas = copy(self.listaAristas)
+        self.noDirigido(self.listaAristas)
+        for vertice in self.listaVertices:
+            if vertice == verticeEntrada:
+                gradoVertice = len(vertice.getListaAdyacentes())
+        self.listaAristas = copiaAristas
+        return gradoVertice
+
     def cargarRedInicial(self, ruta):
         with open(ruta) as contenido:
             redAcme = json.load(contenido)
