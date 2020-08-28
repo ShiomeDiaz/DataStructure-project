@@ -1,7 +1,12 @@
+
+import pygame as pg
 import pygame
 import os
 from Controller.Grafo import Grafo
 from pygame.locals import *
+
+from Controller.Methods import *
+
 
 
 class animacion:
@@ -18,6 +23,18 @@ class animacion:
         self.texto = ""
         self.x = None
         self.y = None
+
+        self.lista = []
+        self.grafo=grafo
+        self.size = self.weight, self.height = 1366, 768 #1270, 670
+        self.ubicacion_actual = os.path.dirname(__file__)  # Where your .py file is located
+        self.ubicacion_imagen = os.path.join(self.ubicacion_actual, 'imagenes')  # The image folder path
+        self.cursor = None
+        self.ColorActive = None
+        self.ColorInactive = None
+        self.Font = None
+
+
         self.clock = None
         self.lista_cuevas = []
         self.lista_carreteras = []
@@ -26,10 +43,13 @@ class animacion:
         self.ubicacion_actual = os.path.dirname(__file__)  # Where your .py file is located
         self.ubicacion_imagen = os.path.join(self.ubicacion_actual, 'imagenes')  # The image folder path
 
+
     def iniciar(self):
         pygame.init()
         pygame.display.set_caption('Montaña  Acme')
+
         self.clock=pygame.time.Clock()
+
         self.montaña = pygame.image.load(os.path.join(self.ubicacion_imagen, 'montaña.png'))
         pygame.display.set_icon(self.montaña)
         self.pantalla = pygame.display.set_mode(self.size)
@@ -39,6 +59,12 @@ class animacion:
         self.empresa = pygame.image.load(os.path.join(self.ubicacion_imagen, 'empresa.png'))
         self.vertice = pygame.image.load(os.path.join(self.ubicacion_imagen, 'cueva.png'))
         self.fuente = pygame.font.Font(None, 30)
+
+        self.cursor=Cursor()
+        self.ColorActive = pygame.Color('lightskyblue3')#color del cuadro de texto
+        self.ColorInactive = pygame.Color('dodgerblue2')#color del cuadro de texto
+        self.Font = pygame.font.Font(None, 32)#fuente en el que se va a escribir
+
 
     def evento(self, evento):
         if evento.type == pygame.QUIT:
@@ -50,8 +76,12 @@ class animacion:
 
             if self.seleccion == "Profundidad":
                 if evento.key == pygame.K_0:
+
+                    self.profundidad(self.texto)
+
                     self.kruskal()
                     #self.profundidad(self.texto)
+
                 else:
                     self.texto = self.texto + evento.unicode
 
@@ -62,6 +92,7 @@ class animacion:
 
     def on_loop(self):
         pass
+
     def kruskal(self):
         lista=[]
         lista = self.grafo.Kruskal()
@@ -74,16 +105,21 @@ class animacion:
                     pygame.display.flip()
                     break
 
+
     def profundidad(self, inicio):
         lista = []
         lista = self.grafo.profundidad(inicio, lista)
+
+
         for i in range(0,len(lista)):
             for diccionario in self.lista_cuevas:
                 if diccionario['Nombre'] == lista[i]:
+
                     self.x = diccionario['x']
                     self.y = diccionario['y']
                     self.mostrar(True)
                     break
+
             for diccionario in self.lista_carreteras:
                 if i+1 <len(lista):
                     if lista[i] == diccionario['inicio'] and lista[i+1] == diccionario['final'] :
@@ -95,19 +131,27 @@ class animacion:
                         clock.tick(1)
                         break
 
+
     def mostrar(self, bandera):
         self.pantalla.blit(self.fondo, (0, 0))
         self.pantalla.blit(self.empresa, (30, 165))
         self.menu(self.seleccion)
+
+
         self.lista_cuevas = self.cuevas(self.grafo.getListaVertices(), 300, 100, 1, 0, self.lista_cuevas)
         self.lista_carreteras=self.carreteras(self.lista_cuevas, self.grafo.getListaAristas(), 0,self.lista_carreteras)
         self.clock.tick(1)
+
         if bandera == False:
             self.x = 210
             self.y = 225
             self.pantalla.blit(self.camion, (self.x, self.y))
         else:
             self.pantalla.blit(self.camion, (self.x, self.y))
+
+        self.grafo.dibujarTabla(self.weight, self.height, self.pantalla)
+
+
         pygame.display.flip()
 
     def menu(self,seleccion):
@@ -123,7 +167,9 @@ class animacion:
         self.pantalla.blit(self.fuente.render(texto, True, (0, 0, 0)), (20, 320))
         self.pantalla.blit(self.fuente.render(self.texto, True, (0, 0, 0)), (200, 320))
 
+
     def cuevas(self,vertices,x,y,contador,posicion,lista_cuevas):
+
         if posicion < len(vertices):
             if contador < 3:
                 self.pantalla.blit(self.fuente.render(vertices[posicion].getDato(), True,(255, 255, 255)), (x+60, y-30))
@@ -168,13 +214,57 @@ class animacion:
         pygame.quit()
 
     def ejecutar(self):
+
+
+        clock = pg.time.Clock()
+        input_box1 = InputBox(50, 345, 32, 32)
+        input_boxes = [input_box1]
+        done = False
         if self.iniciar() == False:
             self.corriendo = False
+
+        # 1. profundidad
+        valores = input_box1.getValor()
+
+        if valores:
+            if valores[0] == 1 and len(valores) == 2:
+                self.profundidad(valores[1])
+                a = []
+                input_box1.setValor(a)
+
+
 
         while (self.corriendo):
             for event in pygame.event.get():
                 self.evento(event)
+                for box in input_boxes:
+                    box.handle_event(event)
+            for box in input_boxes:
+                box.update()
+            for box in input_boxes:
+                box.draw(self.pantalla)
+
+            # 1. profundidad
+            valores = input_box1.getValor()
+            print(valores)
+            if len(valores) == 2:
+
+                if valores[0] == '1':
+                    self.profundidad(valores[1])
+                    a = []
+                    input_box1.setValor(a)
+                if valores[0] == '2':
+                    # Amplitud
+                    a = []
+                    input_box1.setValor(a)
+
+            pygame.display.flip()
+            clock.tick(20)
             self.on_loop()
+            self.cursor.update()
             self.mostrar(False)
+
+
+
         self.salir()
 
