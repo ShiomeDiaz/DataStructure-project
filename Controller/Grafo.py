@@ -154,7 +154,7 @@ class Grafo:
         print(conjunto)
         for arista in aristasPrim:
             print('Origen: {0} - Destino: {1} - Peso: {2}'.format(arista.getOrigen(), arista.getDestino(), arista.getPeso()))
-            return aristasPrim
+        return aristasPrim
 
     def algoritmoPrim(self, copiaAristas, conjunto, aristasPrim, aristasTemp, vertice):
         ciclo = False
@@ -287,7 +287,7 @@ class Grafo:
 
         for dato in AristasBorukvka:
             print("Origen: {0} destino: {1} peso: {2}".format(dato.getOrigen(), dato.getDestino(), dato.getPeso()))
-
+        return AristasBorukvka
 
     def Cantidadconjuntos(self,ListaConjuntos):
         cantidad = 0

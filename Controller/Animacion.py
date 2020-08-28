@@ -101,7 +101,29 @@ class animacion:
                     pygame.draw.line(self.fondo, color, diccionario['arranque'], diccionario['termino'], width)
                     pygame.display.flip()
                     break
+    def prim(self):
+        lista=[]
+        lista = self.grafo.prim()
+        for i in range(0,len(lista)):
+            for diccionario in self.lista_carreteras:
+                if lista[i].getOrigen() == diccionario['inicio'] and lista[i].getDestino() == diccionario['final']:
+                    color = (255, 0, 0)
+                    width = 9
+                    pygame.draw.line(self.fondo, color, diccionario['arranque'], diccionario['termino'], width)
+                    pygame.display.flip()
+                    break
 
+    def boru(self):
+        lista=[]
+        lista = self.grafo.Boruvka()
+        for i in range(0,len(lista)):
+            for diccionario in self.lista_carreteras:
+                if lista[i].getOrigen() == diccionario['inicio'] and lista[i].getDestino() == diccionario['final']:
+                    color = (255, 0, 0)
+                    width = 9
+                    pygame.draw.line(self.fondo, color, diccionario['arranque'], diccionario['termino'], width)
+                    pygame.display.flip()
+                    break
 
     def profundidad(self, inicio):
         lista = []
