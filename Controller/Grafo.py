@@ -498,6 +498,13 @@ class Grafo:
             ventana.blit(miTexto1, (x - 195, 40 + 35 + contador))
             contador += 25
 
+    def dibujarResultado(self, x, y, ventana,texto, blanco = pygame.Color(255, 255, 255), negro = pygame.Color(0, 0, 0)):
+        pygame.draw.rect(ventana, blanco, ((x/2)/ 2, y - 150, 800, y - 100))
+        miFuente = pygame.font.Font(None, 30)
+        neuvoTexto = str(texto)
+        miTexto = miFuente.render(neuvoTexto, 0, negro)
+        ventana.blit(miTexto, (((x/2)/2) + 25, y - 50))
+
     def cambiarDireccion(self, origen, destino):
         for arista in self.listaAristas:
             origenCopia = str(arista.getOrigen())
