@@ -26,7 +26,7 @@ class animacion:
 
         self.lista = []
         self.grafo=grafo
-        self.size = self.weight, self.height = 1366, 768 #1270, 670
+        self.size = self.weight, self.height = 1466, 768 #1270, 670
         self.ubicacion_actual = os.path.dirname(__file__)  # Where your .py file is located
         self.ubicacion_imagen = os.path.join(self.ubicacion_actual, 'imagenes')  # The image folder path
         self.cursor = None
@@ -34,14 +34,11 @@ class animacion:
         self.ColorInactive = None
         self.Font = None
 
-
         self.clock = None
         self.lista_cuevas = []
         self.lista_carreteras = []
-        self.grafo=grafo
-        self.size = self.weight, self.height = 1270, 670
-        self.ubicacion_actual = os.path.dirname(__file__)  # Where your .py file is located
-        self.ubicacion_imagen = os.path.join(self.ubicacion_actual, 'imagenes')  # The image folder path
+
+
 
 
     def iniciar(self):
