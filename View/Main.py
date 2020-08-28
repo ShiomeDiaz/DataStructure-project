@@ -1,7 +1,5 @@
 from Controller.Grafo import Grafo
-
-G = Grafo()
-
+from Controller.Animacion import animacion
 """ G.ingresarVertice('A')
 G.ingresarVertice('B')
 G.ingresarVertice('C')
@@ -33,29 +31,29 @@ G.ingresarArista('G', 'F', 11)
 G.ingresarArista('E', 'G', 9)
 G.ingresarArista('G', 'E', 9) """
 
-G.cargarRedInicial("../Data/redInicial.json")
+if __name__ == "__main__":
+    G = Grafo()
+    G.cargarRedInicial("../Data/redInicial.json")
+    G.imprimirVertice()
+    G.separador()
+    G.imprimirArista()
+    G.separador()
+    G.imprimirListaAdyacentes()
+    G.separador()
+    G.getPozos()
+    G.separador()
+    G.getFuentes()
+    G.separador()
+    G.fuerteConexo()
+    G.separador()
+    G.separador()
+    #G.Boruvka()
+    G.Kruskal()
 
 
-G.imprimirVertice()
-
-G.separador()
-G.imprimirArista()
-
-G.separador()
-G.imprimirListaAdyacentes()
-
-G.separador()
-G.getPozos()
-
-G.separador()
-G.getFuentes()
-
-G.separador()
-G.fuerteConexo()
-
-G.separador()
-
-G.separador()
+    #G.caminoMasCorto("Silvestre", "Coyote")
+    la_animacion = animacion(G)
+    la_animacion.ejecutar()
 
 # G.profundidad(1)
 # G.separador()
