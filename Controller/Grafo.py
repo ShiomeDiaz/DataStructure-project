@@ -152,6 +152,7 @@ class Grafo:
         print(conjunto)
         for arista in aristasPrim:
             print('Origen: {0} - Destino: {1} - Peso: {2}'.format(arista.getOrigen(), arista.getDestino(), arista.getPeso()))
+            return aristasPrim
 
     def algoritmoPrim(self, copiaAristas, conjunto, aristasPrim, aristasTemp, vertice):
         ciclo = False
@@ -213,7 +214,7 @@ class Grafo:
                 copiaAristas.append(Arista(elemento.getDestino(),elemento.getOrigen(),elemento.getPeso()))
 
     def Kruskal(self):
-        copiaAristas = copy(self.ListaAristas)  # copia de las aristas
+        copiaAristas = copy(self.getListaAristas())  # copia de las aristas
         AristasKruskal = []
         ListaConjuntos = []
 
@@ -224,7 +225,7 @@ class Grafo:
         print("-----------Kruskal---------------")
         for dato in AristasKruskal:
             print("Origen: {0} destino: {1} peso: {2}".format(dato.getOrigen(), dato.getDestino(), dato.getPeso()))
-
+        return AristasKruskal
     def Operacionesconjuntos(self, menor, ListaConjuntos, AristasKruskal):
         encontrado1 = -1
         encontrado2 = -1
@@ -269,8 +270,8 @@ class Grafo:
                 AristasKruskal.append(menor)
 
     def Boruvka(self):
-        copiaNodos = copy(self.Listavertices)  # copia de los nodos
-        copiaAristas = copy(self.ListaAristas)  # copia de las aristas
+        copiaNodos = copy(self.getListaVertices())  # copia de los nodos
+        copiaAristas = copy(self.getListaAristas())  # copia de las aristas
 
         AristasBorukvka = []
         ListaConjuntos = []
@@ -304,7 +305,7 @@ class Grafo:
             else:
                 for i in range(len(ListaConjuntos)):
                     if  (menor.getOrigen()  in ListaConjuntos[i]) and (menor.getDestino() in ListaConjuntos[i]):
-                        return False;##Camino cicliclo
+                        return False##Camino cicliclo
 
                 for i in range(len(ListaConjuntos)):
                     if menor.getOrigen() in ListaConjuntos[i]:
@@ -316,7 +317,7 @@ class Grafo:
                     if encontrado1!=encontrado2:#si pertenecen a dos conjuntos diferentes
                         #debo unir los dos conjuntos
                         ListaConjuntos[encontrado1].update(ListaConjuntos[encontrado2])
-                        ListaConjuntos[encontrado2].clear();#elimino el conjunto
+                        ListaConjuntos[encontrado2].clear()#elimino el conjunto
                         AristasBorukvka.append(menor)
 
                 if encontrado1!=-1 and encontrado2==-1:# si va unido por un conjunto
@@ -344,7 +345,7 @@ class Grafo:
                     temp.append(Arista)
         if temp:#si no esta vacia
             #una vez obtenga todas las aristas, saco la menor
-            self.Ordenar(temp)  # ordeno las aristas
+            self.ordenamiento(temp)  # ordeno las aristas
             #elimin ese destino porque ya lo voy a visitar
             #print("{0}-{1}:{2}".format(temp[0].getOrigen(), temp[0].getDestino(), temp[0].getPeso()))
 
@@ -390,6 +391,80 @@ class Grafo:
                 gradoVertice = len(vertice.getListaAdyacentes())
         self.listaAristas = copiaAristas
         return gradoVertice
+
+    def caminoMasCorto(self, origen, destino):
+        VerticesAux = []
+        VerticesD = []
+        caminos = self.dijkstra(origen, VerticesAux)
+        cont = 0
+        for i in caminos:
+            print("La distancia mínima a: " + self.listaVertices[cont].getDato() + " es " + str(i))
+            cont = cont + 1
+        self.rutas(VerticesD, VerticesAux, destino, origen)
+        print("El camino más corto de: " + origen + " a " + destino + " es: ")
+        print(VerticesD)
+
+    def rutas(self, VerticesD, VerticesAux, destino, origen):
+        verticeDestino = self.verificarVertice(destino)
+        indice = self.listaVertices.index(verticeDestino)
+        if VerticesAux[indice] is None:
+            print("No hay camino entre: ", (origen, destino))
+            return
+        aux = destino
+        while aux is not origen:
+            verticeDestino = self.verificarVertice(aux)
+            indice = self.listaVertices.index(verticeDestino)
+            VerticesD.insert(0, aux)
+            aux = VerticesAux[indice]
+        VerticesD.insert(0, aux)
+
+    def dijkstra(self, origen, VerticesAux):
+        marcados = []  # la lista de los que ya hemos visitado
+        caminos = []  # la lista final
+        # iniciar los valores en infinito
+        for v in self.listaVertices:
+            caminos.append(float("inf"))
+            marcados.append(False)
+            VerticesAux.append(None)
+            if v.getDato() is origen:
+                caminos[self.listaVertices.index(v)] = 0
+                VerticesAux[self.listaVertices.index(v)] = v.getDato()
+        while not self.todosMarcados(marcados):
+            aux = self.menorNoMarcado(caminos, marcados)  # obtuve el menor no marcado
+            if aux is None:
+                break
+            indice = self.listaVertices.index(aux)  # indice del menor no marcado
+            marcados[indice] = True  # marco como visitado
+            valorActual = caminos[indice]
+            for vAdya in aux.getListaAdyacentes():
+                indiceNuevo = self.listaVertices.index(self.verificarVertice(vAdya))
+                arista = self.verificarArista(vAdya, aux.getDato())
+                if caminos[indiceNuevo] > valorActual + arista.getPeso():
+                    caminos[indiceNuevo] = valorActual + arista.getPeso()
+                    VerticesAux[indiceNuevo] = self.listaVertices[indice].getDato()
+        return caminos
+
+    def menorNoMarcado(self, caminos, marcados):
+        verticeMenor = None
+        caminosAux = sorted(caminos)
+        copiacaminos = copy(caminos)
+        bandera = True
+        contador = 0
+        while bandera:
+            menor = caminosAux[contador]
+            if marcados[copiacaminos.index(menor)] == False:
+                verticeMenor = self.listaVertices[copiacaminos.index(menor)]
+                bandera = False
+            else:
+                copiacaminos[copiacaminos.index(menor)] = "x"
+                contador = contador + 1
+        return verticeMenor
+
+    def todosMarcados(self, marcados):
+        for j in marcados:
+            if j is False:
+                return False
+        return True
 
     def cargarRedInicial(self, ruta):
         with open(ruta) as contenido:

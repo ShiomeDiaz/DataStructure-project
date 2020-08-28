@@ -47,6 +47,11 @@ if __name__ == "__main__":
     G.fuerteConexo()
     G.separador()
     G.separador()
+    #G.Boruvka()
+    G.Kruskal()
+
+
+    #G.caminoMasCorto("Silvestre", "Coyote")
     la_animacion = animacion(G)
     la_animacion.ejecutar()
 
