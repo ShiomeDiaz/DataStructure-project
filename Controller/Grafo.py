@@ -40,7 +40,19 @@ class Grafo:
                 return arista
         return None
 
-    def profundidad(self, dato):
+    def profundidad(self,posicion,lista_visitados):
+        if self.verificarVertice(posicion):
+            if not lista_visitados:
+                lista_visitados.append(posicion)
+            for adyacente in self.verificarVertice(posicion).getListaAdyacentes():
+                if adyacente not in lista_visitados:
+                    lista_visitados.append(adyacente)
+                    lista_visitados=self.profundidad(adyacente,lista_visitados)
+            return lista_visitados
+        else:
+            return "El vertice señalado para iniciar el recorrido no existe"
+
+    """def profundidad(self, dato):
         if dato in self.listaVisitados:
             return
         else:
@@ -49,7 +61,7 @@ class Grafo:
                 self.listaVisitados.append(vertice.getDato())
                 for dato in vertice.getListaAdyacentes():
                     self.profundidad(dato)
-
+    """
     def amplitud(self, dato):
         visitadosA = []
         cola = deque()

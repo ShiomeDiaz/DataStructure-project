@@ -14,6 +14,11 @@ class animacion:
         self.camion=None
         self.empresa=None
         self.montaña=None
+        self.seleccion = ""
+        self.texto = ""
+        self.x = None
+        self.y = None
+        self.lista = []
         self.grafo=grafo
         self.size = self.weight, self.height = 1270, 670
         self.ubicacion_actual = os.path.dirname(__file__)  # Where your .py file is located
@@ -35,23 +40,64 @@ class animacion:
     def evento(self, evento):
         if evento.type == pygame.QUIT:
             self.corriendo = False
+
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_ESCAPE:
                 self.corriendo = False
-            if evento.key == pygame.K_1:
-                self.agregar_cueva()
+
+            if self.seleccion == "Profundidad":
+                if evento.key == pygame.K_0:
+                    self.profundidad(self.texto)
+                else:
+                    self.texto = self.texto + evento.unicode
+
+        if evento.type == MOUSEBUTTONDOWN:
+            x_mouse, y_mouse = pygame.mouse.get_pos()
+            if 20 <= x_mouse <= 170 and 315 <= y_mouse <= 350:
+                self.seleccion = "Profundidad"
 
     def on_loop(self):
         pass
 
-    def mostrar(self):
+    def profundidad(self, inicio):
+        lista = []
+        lista = self.grafo.profundidad(inicio, lista)
+        for elemento in lista:
+            for diccionario in self.lista:
+                if diccionario['Nombre'] == elemento:
+                    self.x = diccionario['x']
+                    self.y = diccionario['y']
+                    self.mostrar(True)
+                    break
+
+    def mostrar(self, bandera):
         self.pantalla.blit(self.fondo, (0, 0))
-        self.pantalla.blit(self.empresa, (25,165))
-        self.pantalla.blit(self.camion,(200,225))
-        lista=[]
-        lista=self.cuevas(self.grafo.getListaVertices(),270,100,0,0,lista)
-        self.carreteras(lista,self.grafo.getListaAristas(),0)
+        self.pantalla.blit(self.empresa, (30, 165))
+        self.menu(self.seleccion)
+        self.lista = self.cuevas(self.grafo.getListaVertices(), 300, 100, 0, 0, self.lista)
+        self.carreteras(self.lista, self.grafo.getListaAristas(), 0)
+        clock = pygame.time.Clock()
+        clock.tick(2)
+        if bandera == False:
+            self.x = 210
+            self.y = 225
+            self.pantalla.blit(self.camion, (self.x, self.y))
+        else:
+            self.pantalla.blit(self.camion, (self.x, self.y))
         pygame.display.flip()
+
+    def menu(self,seleccion):
+        s = pygame.Surface((270, 340))  # the size of your rect
+        s.set_alpha(128)  # alpha level
+        s.fill((255, 255, 255))  # this fills the entire surface
+        self.pantalla.blit(s, (16, 310))  # (0,0) are the top-left coordinates
+        texto="PROFUNDIDAD"
+        s = pygame.Surface((150, 25))  # the size of your rect
+        s.set_alpha(192)  # alpha level
+        s.fill((155, 155, 155))  # this fills the entire surface
+        self.pantalla.blit(s, (20, 315))  # (0,0) are the top-left coordinates
+        self.pantalla.blit(self.fuente.render(texto, True, (0, 0, 0)), (20, 320))
+        self.pantalla.blit(self.fuente.render(self.texto, True, (0, 0, 0)), (200, 320))
 
     def cuevas(self,vertices,x,y,contador,posicion,lista):
         if posicion < len(vertices):
@@ -100,6 +146,6 @@ class animacion:
             for event in pygame.event.get():
                 self.evento(event)
             self.on_loop()
-            self.mostrar()
+            self.mostrar(False)
         self.salir()
 
