@@ -3,11 +3,13 @@ from Model.Vertice import Vertice
 from collections import deque
 from copy import copy
 import json
+import pygame
 class Grafo:
     def __init__(self):
         self.listaVertices = []
         self.listaAristas = []
         self.listaVisitados = []
+        self.listaBloqueadas = []
 
     def getListaVertices(self):
         return self.listaVertices
@@ -40,7 +42,19 @@ class Grafo:
                 return arista
         return None
 
-    def profundidad(self, dato):
+    def profundidad(self,posicion,lista_visitados):
+        if self.verificarVertice(posicion):
+            if not lista_visitados:
+                lista_visitados.append(posicion)
+            for adyacente in self.verificarVertice(posicion).getListaAdyacentes():
+                if adyacente not in lista_visitados:
+                    lista_visitados.append(adyacente)
+                    lista_visitados=self.profundidad(adyacente,lista_visitados)
+            return lista_visitados
+        else:
+            return "El vertice señalado para iniciar el recorrido no existe"
+
+    """def profundidad(self, dato):
         if dato in self.listaVisitados:
             return
         else:
@@ -49,7 +63,7 @@ class Grafo:
                 self.listaVisitados.append(vertice.getDato())
                 for dato in vertice.getListaAdyacentes():
                     self.profundidad(dato)
-
+    """
     def amplitud(self, dato):
         visitadosA = []
         cola = deque()
@@ -341,6 +355,44 @@ class Grafo:
 
         return None#es la menor
 
+    def cambiarDireccion(self, origen, destino):
+        for arista in self.listaAristas:
+            origenCopia = str(arista.getOrigen())
+            destinoCopia = str(arista.getDestino())
+            if origen == origenCopia and destino == destinoCopia:
+                temp = arista.getOrigen()
+                arista.setOrigen(arista.getDestino())
+                arista.setDestino(temp)
+
+    def bloquearArista(self, origen, destino):
+        for arista in self.listaAristas:
+            origenCopia = str(arista.getOrigen())
+            destinoCopia = str(arista.getDestino())
+            if origen == origenCopia and destino == destinoCopia:
+                self.listaBloqueadas.append(arista)
+                indice = self.listaAristas.index(arista)
+                self.listaAristas.pop(indice)
+
+    def desbloquearArista(self, origen, destino):
+        for arista in self.listaBloqueadas:
+            origenCopia = str(arista.getOrigen())
+            destinoCopia = str(arista.getDestino())
+            if origen == origenCopia and destino == destinoCopia:
+                self.listaAristas.append(arista)
+                indice = self.listaBloqueadas.index(arista)
+                self.listaBloqueadas.pop(indice)
+
+    def gradoVertice(self, vertice):
+        gradoVertice = 0
+        verticeEntrada = self.verificarVertice(vertice)
+        copiaAristas = copy(self.listaAristas)
+        self.noDirigido(self.listaAristas)
+        for vertice in self.listaVertices:
+            if vertice == verticeEntrada:
+                gradoVertice = len(vertice.getListaAdyacentes())
+        self.listaAristas = copiaAristas
+        return gradoVertice
+
     def cargarRedInicial(self, ruta):
         with open(ruta) as contenido:
             redAcme = json.load(contenido)
@@ -349,3 +401,24 @@ class Grafo:
         for arista in redAcme["Caminos"]:
             self.ingresarArista(arista[0], arista[1], arista[2])
         self.noDirigido(self.listaAristas)
+
+    def dibujarTabla(self, x, y, ventana, aguaMarina = pygame.Color(14, 236, 125), blanco = pygame.Color(255, 255, 255), negro = pygame.Color(0, 0, 0)):
+        contador = 0
+        pygame.draw.rect(ventana, aguaMarina, (x - 200, 0, 400, 30))
+        pygame.draw.rect(ventana, blanco, (x - 200, 30, 400, y - 30))
+        miFuente = pygame.font.Font(None, 23)
+        miTexto = miFuente.render('LISTA ARISTAS', 0, blanco)
+        ventana.blit(miTexto, (x - 195, 8))
+        for arista in self.listaAristas:
+            miTexto1 = miFuente.render(
+                '{} - {} - {}'.format(arista.getOrigen(), arista.getDestino(), arista.getPeso()), 0, negro)
+            ventana.blit(miTexto1, (x - 195, 35 + contador))
+            contador += 25
+        pygame.draw.rect(ventana, aguaMarina, (x - 200, 0 + contador + 35, 400, 30))
+        miTexto = miFuente.render('LISTA BLOQUEADAS', 0, blanco)
+        ventana.blit(miTexto, (x - 195, 8 + 35 + contador))
+        for bloqueada in self.listaBloqueadas:
+            miTexto1 = miFuente.render(
+                '{} - {} - {}'.format(bloqueada.getOrigen(), bloqueada.getDestino(), bloqueada.getPeso()), 0, negro)
+            ventana.blit(miTexto1, (x - 195, 40 + 35 + contador))
+            contador += 25
